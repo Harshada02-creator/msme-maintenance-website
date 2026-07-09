@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MSMEs Maintenance Website</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c50, #2c3e50, #34495e);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative background icons (gears, wrench, bolt) */
+        .bg-icon {
+            position: absolute;
+            opacity: 0.12;
+            z-index: 0;
+        }
+
+        .icon1 { top: 5%; left: 8%; width: 120px; animation: spin 20s linear infinite; }
+        .icon2 { bottom: 8%; right: 10%; width: 160px; animation: spin 25s linear infinite reverse; }
+        .icon3 { top: 15%; right: 15%; width: 90px; }
+        .icon4 { bottom: 15%; left: 12%; width: 100px; }
+        .icon5 { top: 45%; left: 3%; width: 70px; }
+        .icon6 { top: 55%; right: 5%; width: 80px; }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .top-banner {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            padding: 25px 0 10px 0;
+            z-index: 2;
+        }
+
+        .top-banner h1 {
+            color: #ffffff;
+            font-size: 28px;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .top-banner p {
+            color: #bfd4e0;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, 0.97);
+            padding: 35px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+            width: 320px;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .box h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 3px solid #e67e22;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #d35400;
+        }
+
+        .switch-link {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #2c3e50;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Decorative industrial background icons -->
+    <svg class="bg-icon icon1" viewBox="0 0 100 100" fill="white"><path d="M50 15a35 35 0 1 0 0.1 0zM50 35a15 15 0 1 1-0.1 0z"/><g fill="white"><rect x="46" y="0" width="8" height="15"/><rect x="46" y="85" width="8" height="15"/><rect x="0" y="46" width="15" height="8"/><rect x="85" y="46" width="15" height="8"/></g></svg>
+
+    <svg class="bg-icon icon2" viewBox="0 0 100 100" fill="white"><path d="M50 15a35 35 0 1 0 0.1 0zM50 35a15 15 0 1 1-0.1 0z"/><g fill="white"><rect x="46" y="0" width="8" height="15"/><rect x="46" y="85" width="8" height="15"/><rect x="0" y="46" width="15" height="8"/><rect x="85" y="46" width="15" height="8"/></g></svg>
+
+    <svg class="bg-icon icon3" viewBox="0 0 100 100" fill="white">
+        <path d="M75 10 L85 20 L55 50 L60 55 L30 85 L15 70 L45 40 L50 45 Z"/>
+    </svg>
+
+    <svg class="bg-icon icon4" viewBox="0 0 100 100" fill="white">
+        <path d="M75 10 L85 20 L55 50 L60 55 L30 85 L15 70 L45 40 L50 45 Z"/>
+    </svg>
+
+    <svg class="bg-icon icon5" viewBox="0 0 100 100" fill="white">
+        <circle cx="50" cy="30" r="12"/>
+        <rect x="44" y="42" width="12" height="45"/>
+        <rect x="35" y="80" width="30" height="8"/>
+    </svg>
+
+    <svg class="bg-icon icon6" viewBox="0 0 100 100" fill="white">
+        <rect x="20" y="45" width="60" height="10" rx="2"/>
+        <rect x="15" y="35" width="15" height="30" rx="2"/>
+        <rect x="70" y="35" width="15" height="30" rx="2"/>
+    </svg>
+
+    <div class="top-banner">
+        <h1>🏭 MSMEs Maintenance Website</h1>
+        <p>Machine Maintenance Management for Small-Scale Industries</p>
+    </div>
+
+    <!-- LOGIN BOX -->
+    <div class="box" id="loginBox">
+        <h2>Login</h2>
+
+        <select id="loginRole">
+            <option value="user">User (Industry)</option>
+            <option value="repairer">Repairer (Expert)</option>
+        </select>
+
+        <input type="text" id="loginPhone" placeholder="Phone Number">
+        <input type="password" id="loginPassword" placeholder="Password">
+
+        <button onclick="handleLogin()">Login</button>
+
+        <div class="switch-link" onclick="showSignup()">New here? Sign up with phone number</div>
+    </div>
+
+    <!-- SIGNUP BOX (hidden by default) -->
+    <div class="box hidden" id="signupBox">
+        <h2>Sign Up</h2>
+
+        <select id="signupRole">
+            <option value="user">User (Industry)</option>
+            <option value="repairer">Repairer (Expert)</option>
+        </select>
+
+        <input type="text" id="signupName" placeholder="Full Name">
+        <input type="text" id="signupPhone" placeholder="Phone Number">
+        <input type="password" id="signupPassword" placeholder="Create Password">
+
+        <button onclick="handleSignup()">Sign Up</button>
+
+        <div class="switch-link" onclick="showLogin()">Already have an account? Login</div>
+    </div>
+
+    <script>
+        function showSignup() {
+            document.getElementById('loginBox').classList.add('hidden');
+            document.getElementById('signupBox').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('signupBox').classList.add('hidden');
+            document.getElementById('loginBox').classList.remove('hidden');
+        }
+
+        function handleLogin() {
+    const userData = JSON.parse(localStorage.getItem('msmeUser'));
+
+    if (!userData) {
+        alert("Please sign up first.");
+        return;
+    }
+
+    if (userData.role === "user") {
+        if (userData.companyName) {
+            window.location.href = "user-dashboard.html";
+        } else {
+            window.location.href = "company-details.html";
+        }
+    } else {
+        if (userData.specialization) {
+            window.location.href = "repairer-dashboard.html";
+        } else {
+            window.location.href = "repairer-details.html";
+        }
+    }
+}
+
+        function handleSignup() {
+            const role = document.getElementById('signupRole').value;
+            const name = document.getElementById('signupName').value;
+            const phone = document.getElementById('signupPhone').value;
+            const password = document.getElementById('signupPassword').value;
+
+            if (name === "" || phone === "" || password === "") {
+                alert("Please fill all fields");
+                return;
+            }
+
+            // Save what they entered so the next pages can use their real details
+            const userData = {
+                role: role,
+                name: name,
+                phone: phone
+            };
+            localStorage.setItem('msmeUser', JSON.stringify(userData));
+
+            // Take them to the right onboarding form based on role
+            if (role === "user") {
+                window.location.href = "company-details.html";
+            } else {
+                window.location.href = "repairer-details.html";
+            }
+        }
+    </script>
+
+</body>
+</html>

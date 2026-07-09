@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MSMEs Maintenance Website - User Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c50, #2c3e50, #34495e);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            color: white;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        header button {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        header button:hover {
+            background-color: #d35400;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .welcome {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .welcome h2 {
+            margin: 0 0 5px 0;
+        }
+
+        .welcome p {
+            color: #bfd4e0;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .card .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .card .label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .card.total { border-top: 4px solid #2c3e50; }
+        .card.pending { border-top: 4px solid #e67e22; }
+        .card.upcoming { border-top: 4px solid #27ae60; }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #e67e22;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            color: #2c3e50;
+            font-size: 13px;
+        }
+
+        .add-btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            float: right;
+            margin-top: -35px;
+        }
+
+        .add-btn:hover {
+            background-color: #d35400;
+        }
+
+        .empty-row td {
+            text-align: center;
+            color: #999;
+            padding: 25px 10px;
+            font-size: 13px;
+        }
+
+        .status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status.working { background: #d4edda; color: #27ae60; }
+        .status.needs-repair { background: #f8d7da; color: #c0392b; }
+        .status.maintenance-due { background: #fff3cd; color: #b8860b; }
+
+        .repair-btn {
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .repair-btn:hover {
+            background-color: #a93226;
+        }
+
+        /* Inline Add Machine form */
+        .add-form {
+            display: none;
+            background: #f4f6f7;
+            border: 1px dashed #e67e22;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .add-form.show {
+            display: block;
+        }
+
+        .add-form label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 8px;
+            margin-bottom: 3px;
+        }
+
+        .add-form input, .add-form select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .save-machine-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 12px;
+            margin-right: 8px;
+        }
+
+        .save-machine-btn:hover {
+            background-color: #1e8449;
+        }
+
+        .cancel-machine-btn {
+            background-color: #999;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        .cancel-machine-btn:hover {
+            background-color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏭 MSMEs Maintenance Website</h1>
+        <button onclick="logout()">Logout</button>
+    </header>
+
+    <div class="container">
+        <div class="welcome">
+            <h2 id="welcomeName">Welcome</h2>
+            <p>Here's an overview of your machines and maintenance status</p>
+        </div>
+
+        <div class="cards">
+            <div class="card total">
+                <div class="number" id="totalMachines">0</div>
+                <div class="label">Total Machines</div>
+            </div>
+            <div class="card pending">
+                <div class="number" id="pendingRepairs">0</div>
+                <div class="label">Pending Repairs</div>
+            </div>
+            <div class="card upcoming">
+                <div class="number" id="maintenanceRecords">0</div>
+                <div class="label">Maintenance Records</div>
+            </div>
+        </div>
+
+        <div class="section">
+           <button onclick="findRepairer()">Find Repairer</button>
+            <button class="add-btn" onclick="toggleAddForm()">+ Add Machine</button>
+
+            <table id="machineTable">
+                <tr>
+                    <th>Machine Name</th>
+                    <th>Problem Faced (Previous)</th>
+                    <th>Last Maintenance Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                <tr class="empty-row" id="emptyRow">
+                    <td colspan="5">No machines added yet. Click "+ Add Machine" above to add your first one.</td>
+                </tr>
+            </table>
+
+            <!-- Inline Add Machine Form -->
+            <div class="add-form" id="addForm">
+                <div class="form-row">
+                    <div>
+                        <label>Machine Name</label>
+                        <input type="text" id="newMachineName" placeholder="e.g. Lathe Machine 1">
+                    </div>
+                    <div>
+                        <label>Machine Type</label>
+                        <select id="newMachineType">
+                            <option value="">-- Select --</option>
+                            <option value="Lathe">Lathe</option>
+                            <option value="CNC">CNC</option>
+                            <option value="Boiler">Boiler</option>
+                            <option value="Compressor">Compressor</option>
+                            <option value="Generator">Generator</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Previous Problem Faced (if any)</label>
+                        <input type="text" id="newMachineProblem" placeholder="e.g. Motor overheating">
+                    </div>
+                    <div>
+                        <label>Last Maintenance Date</label>
+                        <input type="date" id="newMachineDate">
+                    </div>
+                </div>
+
+                <label>Current Status</label>
+                <select id="newMachineStatus">
+                    <option value="working">Working</option>
+                    <option value="needs-repair">Needs Repair</option>
+                    <option value="maintenance-due">Maintenance Due</option>
+                </select>
+
+                <div>
+                    <button class="save-machine-btn" onclick="saveMachine()">Save Machine</button>
+                    <button class="cancel-machine-btn" onclick="toggleAddForm()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let totalMachines = 0;
+        let pendingRepairs = 0;
+        let maintenanceRecords = 0;
+        function loadMachines() {
+    let machines = JSON.parse(localStorage.getItem("machines")) || [];
+
+    machines.forEach(machine => {
+        document.getElementById('emptyRow').style.display = 'none';
+
+        const table = document.getElementById('machineTable');
+        const newRow = table.insertRow(-1);
+
+        let statusText = "Working";
+
+        if (machine.status === "needs-repair") {
+            statusText = "Needs Repair";
+        } else if (machine.status === "maintenance-due") {
+            statusText = "Maintenance Due";
+        }
+
+        newRow.innerHTML =
+            '<td>' + machine.name + '</td>' +
+            '<td>' + (machine.problem || '-') + '</td>' +
+            '<td>' + (machine.date || '-') + '</td>' +
+            '<td><span class="status ' + machine.status + '">' + statusText + '</span></td>' +
+            '<td><button class="repair-btn" onclick="requestRepair(this)">Request Repair</button></td>';
+    });
+}
+
+        // Load the real logged-in user's name when the page opens
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('msmeUser'));
+            if (userData && userData.companyName) {
+                document.getElementById('welcomeName').innerText = "Welcome, " + userData.companyName;
+            } else {
+                document.getElementById('welcomeName').innerText = "Welcome";
+            }
+        }
+        loadUserData();
+        loadMachines();
+
+        function toggleAddForm() {
+            document.getElementById('addForm').classList.toggle('show');
+        }
+
+        function saveMachine() {
+    const name = document.getElementById('newMachineName').value;
+    const type = document.getElementById('newMachineType').value;
+    const problem = document.getElementById('newMachineProblem').value;
+    const date = document.getElementById('newMachineDate').value;
+    const status = document.getElementById('newMachineStatus').value;
+
+    if (name === "" || type === "") {
+        alert("Please enter at least Machine Name and Machine Type");
+        return;
+    }
+
+    let machines = JSON.parse(localStorage.getItem("machines")) || [];
+
+    machines.push({
+        name: name,
+        problem: problem,
+        date: date,
+        status: status
+    });
+
+   
+localStorage.setItem("machines", JSON.stringify(machines));
+            if (name === "" || type === "") {
+                alert("Please enter at least Machine Name and Machine Type");
+                return;
+            }
+
+            // Hide the "no machines" message once we add the first machine
+            document.getElementById('emptyRow').style.display = 'none';
+
+            // Figure out status badge text and class
+            let statusClass = 'working';
+            let statusText = 'Working';
+            if (status === 'needs-repair') {
+                statusClass = 'needs-repair';
+                statusText = 'Needs Repair';
+            } else if (status === 'maintenance-due') {
+                statusClass = 'maintenance-due';
+                statusText = 'Maintenance Due';
+            }
+
+            // Build the new table row
+            const table = document.getElementById('machineTable');
+            const newRow = table.insertRow(-1);
+            newRow.innerHTML =
+                '<td>' + name + '</td>' +
+                '<td>' + (problem === "" ? '-' : problem) + '</td>' +
+                '<td>' + (date === "" ? '-' : date) + '</td>' +
+                '<td><span class="status ' + statusClass + '">' + statusText + '</span></td>' +
+                '<td><button class="repair-btn" onclick="requestRepair(this)">Request Repair</button></td>';
+
+            // Update the summary cards
+            totalMachines++;
+            document.getElementById('totalMachines').innerText = totalMachines;
+
+            if (status === 'needs-repair') {
+                pendingRepairs++;
+                document.getElementById('pendingRepairs').innerText = pendingRepairs;
+            }
+
+            if (date !== "") {
+                maintenanceRecords++;
+                document.getElementById('maintenanceRecords').innerText = maintenanceRecords;
+            }
+
+            // Clear the form and hide it
+            document.getElementById('newMachineName').value = "";
+            document.getElementById('newMachineType').value = "";
+            document.getElementById('newMachineProblem').value = "";
+            document.getElementById('newMachineDate').value = "";
+            document.getElementById('newMachineStatus').value = "working";
+            toggleAddForm();
+        }
+
+       function requestRepair(button) {
+      
+    const row = button.closest("tr");
+
+    const machineName = row.cells[0].innerText;
+    const machineProblem = row.cells[1].innerText;
+
+    localStorage.setItem(
+        "selectedMachine",
+        JSON.stringify({
+            machine: machineName,
+            problem: machineProblem
+        })
+    );
+
+    window.location.href = "find-repairer.html";
+
+}
+        function findRepairer() {
+            window.location.href = "find-repairer.html";
+}
+       function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+}
+    </script>
+
+</body>
+</html

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MSMEs Maintenance Website - Company Details</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c50, #2c3e50, #34495e);
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 40px 0;
+        }
+
+        .bg-icon {
+            position: absolute;
+            opacity: 0.10;
+            z-index: 0;
+        }
+
+        .icon1 { top: 5%; left: 6%; width: 110px; animation: spin 20s linear infinite; }
+        .icon2 { bottom: 6%; right: 8%; width: 140px; animation: spin 25s linear infinite reverse; }
+        .icon3 { top: 20%; right: 10%; width: 80px; }
+        .icon4 { bottom: 20%; left: 8%; width: 90px; }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .top-banner {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0 5px 0;
+            z-index: 2;
+        }
+
+        .top-banner h1 {
+            color: #ffffff;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .top-banner p {
+            color: #bfd4e0;
+            margin: 5px 0 0 0;
+            font-size: 13px;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, 0.97);
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+            width: 380px;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            margin-top: 90px;
+        }
+
+        .box h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 3px solid #e67e22;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .box p.subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-top: -5px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 3px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #d35400;
+        }
+    </style>
+</head>
+<body>
+
+    <svg class="bg-icon icon1" viewBox="0 0 100 100" fill="white"><path d="M50 15a35 35 0 1 0 0.1 0zM50 35a15 15 0 1 1-0.1 0z"/><g fill="white"><rect x="46" y="0" width="8" height="15"/><rect x="46" y="85" width="8" height="15"/><rect x="0" y="46" width="15" height="8"/><rect x="85" y="46" width="15" height="8"/></g></svg>
+
+    <svg class="bg-icon icon2" viewBox="0 0 100 100" fill="white"><path d="M50 15a35 35 0 1 0 0.1 0zM50 35a15 15 0 1 1-0.1 0z"/><g fill="white"><rect x="46" y="0" width="8" height="15"/><rect x="46" y="85" width="8" height="15"/><rect x="0" y="46" width="15" height="8"/><rect x="85" y="46" width="15" height="8"/></g></svg>
+
+    <svg class="bg-icon icon3" viewBox="0 0 100 100" fill="white">
+        <path d="M75 10 L85 20 L55 50 L60 55 L30 85 L15 70 L45 40 L50 45 Z"/>
+    </svg>
+
+    <svg class="bg-icon icon4" viewBox="0 0 100 100" fill="white">
+        <circle cx="50" cy="30" r="12"/>
+        <rect x="44" y="42" width="12" height="45"/>
+        <rect x="35" y="80" width="30" height="8"/>
+    </svg>
+
+    <div class="top-banner">
+        <h1>🏭 MSMEs Maintenance Website</h1>
+        <p>Tell us about your company</p>
+    </div>
+
+    <div class="box">
+        <h2>Company Details</h2>
+        <p class="subtitle">This helps us set up your machine records</p>
+
+        <label>Company Name</label>
+        <input type="text" id="companyName" placeholder="e.g. Sharma Metal Works">
+
+        <label>Company Address / MIDC Area</label>
+        <input type="text" id="companyAddress" placeholder="e.g. Bhosari MIDC, Pune">
+
+        <label>Type of Industry</label>
+        <select id="industryType">
+            <option value="">-- Select Industry Type --</option>
+            <option value="textile">Textile</option>
+            <option value="metal">Metal Works</option>
+            <option value="plastic">Plastic</option>
+            <option value="food">Food Processing</option>
+            <option value="chemical">Chemical</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label>Number of Machines</label>
+        <input type="number" id="machineCount" placeholder="e.g. 5" min="1">
+
+        <label>Machine Types Used</label>
+        <select id="machineTypes" multiple size="4">
+            <option value="lathe">Lathe Machine</option>
+            <option value="cnc">CNC Machine</option>
+            <option value="boiler">Boiler</option>
+            <option value="compressor">Compressor</option>
+            <option value="generator">Generator</option>
+            <option value="conveyor">Conveyor Belt</option>
+        </select>
+
+        <label>Contact Person Name</label>
+        <input type="text" id="contactName" placeholder="e.g. Ramesh Sharma">
+
+        <label>Contact Phone Number</label>
+        <input type="text" id="contactPhone" placeholder="e.g. 9876543210">
+
+        <button onclick="saveCompanyDetails()">Save & Continue to Dashboard</button>
+    </div>
+
+    <script>
+        function saveCompanyDetails() {
+            const companyName = document.getElementById('companyName').value;
+            const companyAddress = document.getElementById('companyAddress').value;
+            const industryType = document.getElementById('industryType').value;
+            const machineCount = document.getElementById('machineCount').value;
+            const contactName = document.getElementById('contactName').value;
+            const contactPhone = document.getElementById('contactPhone').value;
+
+            if (companyName === "" || companyAddress === "" || industryType === "" || machineCount === "" || contactName === "" || contactPhone === "") {
+                alert("Please fill all fields before continuing");
+                return;
+            }
+
+            // Get existing user data (name, phone, role) saved during signup, and add these company details to it
+            let userData = JSON.parse(localStorage.getItem('msmeUser')) || {};
+            userData.companyName = companyName;
+            userData.companyAddress = companyAddress;
+            userData.industryType = industryType;
+            userData.machineCount = machineCount;
+            userData.contactName = contactName;
+            userData.contactPhone = contactPhone;
+            localStorage.setItem('msmeUser', JSON.stringify(userData));
+
+            window.location.href = "user-dashboard.html";
+        }
+    </script>
+
+</body>
+</html>
