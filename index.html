@@ -199,30 +199,46 @@
             document.getElementById('loginBox').classList.remove('hidden');
         }
 
-        function handleLogin() {
-    const userData = JSON.parse(localStorage.getItem('msmeUser'));
+        async function handleLogin() {
+    const role = document.getElementById('loginRole').value;
+const phone = document.getElementById('loginPhone').value;
 
-    if (!userData) {
-        alert("Please sign up first.");
-        return;
-    }
-
-    if (userData.role === "user") {
-        if (userData.companyName) {
-            window.location.href = "user-dashboard.html";
-        } else {
-            window.location.href = "company-details.html";
-        }
-    } else {
-        if (userData.specialization) {
-            window.location.href = "repairer-dashboard.html";
-        } else {
-            window.location.href = "repairer-details.html";
-        }
-    }
+if (phone === "") {
+    alert("Please enter phone number");
+    return;
 }
 
-        function handleSignup() {
+const response = await fetch("http://localhost:5000/auth/login", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        email: phone
+    })
+});
+
+const data = await response.json();
+
+alert(data.message);
+
+localStorage.setItem(
+    "msmeUser",
+    JSON.stringify({
+        name: data.user.name,
+        phone: data.user.email,
+        role: data.user.role
+    })
+);
+
+if (data.user.role === "user") {
+    window.location.href = "company-details.html";
+} else {
+    window.location.href = "repairer-details.html";
+}
+}
+
+        async function handleSignup() {
             const role = document.getElementById('signupRole').value;
             const name = document.getElementById('signupName').value;
             const phone = document.getElementById('signupPhone').value;
@@ -234,20 +250,39 @@
             }
 
             // Save what they entered so the next pages can use their real details
-            const userData = {
-                role: role,
-                name: name,
-                phone: phone
-            };
-            localStorage.setItem('msmeUser', JSON.stringify(userData));
+            const response = await fetch("http://localhost:5000/auth/signup", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: name,
+        email: phone,
+        password: password,
+        role: role
+    })
+});
 
-            // Take them to the right onboarding form based on role
-            if (role === "user") {
-                window.location.href = "company-details.html";
-            } else {
-                window.location.href = "repairer-details.html";
-            }
-        }
+const data = await response.json();
+
+alert(data.message);
+
+localStorage.setItem(
+    "msmeUser",
+    JSON.stringify({
+        name,
+        phone,
+        role
+    })
+);
+
+if (role === "user") {
+    window.location.href = "company-details.html";
+} else {
+    window.location.href = "repairer-details.html";
+}
+
+}
     </script>
 
 </body>

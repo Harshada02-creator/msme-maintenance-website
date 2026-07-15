@@ -181,7 +181,7 @@
     </div>
 
     <script>
-        function saveRepairerDetails() {
+         async function saveRepairerDetails() {
             const name = document.getElementById('repairerName').value;
             const phone = document.getElementById('repairerPhone').value;
             const specialization = document.getElementById('specialization').value;
@@ -195,17 +195,39 @@
                 return;
             }
 
-            let userData = JSON.parse(localStorage.getItem('msmeUser')) || {};
-            userData.name = name;
-            userData.phone = phone;
-            userData.specialization = specialization;
-            userData.experience = experience;
-            userData.serviceArea = serviceArea;
-            userData.charges = charges;
-            userData.idProof = idProof;
-            localStorage.setItem('msmeUser', JSON.stringify(userData));
+            const response = await fetch("http://localhost:5000/repairer", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: name,
+        phone: phone,
+        specialization: specialization,
+        experience: experience,
+        serviceArea: serviceArea,
+        charges: charges,
+        idProof: idProof
+    })
+});
 
-            window.location.href = "repairer-dashboard.html";
+const data = await response.json();
+
+alert(data.message);
+
+let userData = JSON.parse(localStorage.getItem('msmeUser')) || {};
+
+userData.name = name;
+userData.phone = phone;
+userData.specialization = specialization;
+userData.experience = experience;
+userData.serviceArea = serviceArea;
+userData.charges = charges;
+userData.idProof = idProof;
+
+localStorage.setItem('msmeUser', JSON.stringify(userData));
+
+window.location.href = "repairer-dashboard.html";
         }
     </script>
 

@@ -156,7 +156,6 @@
             <p>Browse available repair experts and call the one that suits you best</p>
             <div id="machineInfo"></div>
         
-
         <div class="filter-bar">
             <label>Filter by Specialization:</label>
             <select id="specializationFilter" onchange="filterExperts()">
@@ -210,44 +209,120 @@
         </div>
     </div>
 
-    <script>
-        function filterExperts() {
-            const selected = document.getElementById('specializationFilter').value;
-            const cards = document.querySelectorAll('.expert-card');
+   <script>
+function filterExperts() {
+    const selected = document.getElementById('specializationFilter').value;
+    const cards = document.querySelectorAll('.expert-card');
 
-            cards.forEach(function(card) {
-                if (selected === 'all' || card.getAttribute('data-specialization') === selected) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+    cards.forEach(function(card) {
+        if (
+            selected === 'all' ||
+            card.getAttribute('data-specialization') === selected
+        ) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
         }
+    });
+}
 
-       function goBack() {
+function goBack() {
     window.location.href = "user-dashboard.html";
 }
-<script>
-    function filterExperts() {
-        // your existing code
+ async function sendRequest(
+    repairerName,
+    repairerPhone
+) {
+    const machine = JSON.parse(
+        localStorage.getItem("selectedMachine")
+    );
+
+    const user = JSON.parse(
+        localStorage.getItem("msmeUser")
+    );
+
+    if (!machine) {
+        alert("No machine selected.");
+        return;
     }
 
-    function goBack() {
-        window.location.href = "user-dashboard.html";
-    }
-
-    // ADD THIS HERE
-    window.onload = function () {
-        const machine = JSON.parse(
-            localStorage.getItem("selectedMachine")
-        );
-
-        if (machine) {
-            document.getElementById("machineInfo").innerHTML =
-                "<h3>Machine: " + machine.machine + "</h3>" +
-                "<p>Problem: " + machine.problem + "</p>";
+    const response = await fetch(
+        "http://localhost:5000/request",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                company: user.companyName,
+                machine: machine.machine,
+                problem: machine.problem,
+                repairerName: repairerName,
+                repairerPhone: repairerPhone,
+                status: "Pending"
+            })
         }
-    };
+    );
+
+    const data = await response.json();
+    alert(data.message);
+}
+
+ 
+async function loadRepairers() {
+    const response = await fetch(
+        "http://localhost:5000/repairer"
+    );
+
+    const data = await response.json();
+
+    const repairers = data.repairers || [];
+
+    const grid = document.getElementById("expertGrid");
+    console.log(repairers);
+
+    repairers.forEach(repairer => {
+        grid.innerHTML += `
+        <div class="expert-card"
+             data-specialization="${repairer.specialization}">
+            <h3>${repairer.name}</h3>
+            <span class="tag">
+                ${repairer.specialization}
+            </span>
+            <p>📍 ${repairer.serviceArea}</p>
+            <p>🛠️ ${repairer.experience} years experience</p>
+            <p>💰 ${repairer.charges}</p>
+           <a href="tel:${repairer.phone}"
+   class="call-btn">
+   📞 Call ${repairer.phone}
+</a>
+
+<button
+    class="call-btn"
+    onclick="sendRequest(
+        '${repairer.name}',
+        '${repairer.phone}'
+    )"
+>
+    Send Request
+</button>
+        </div>
+        `;
+    });
+}
+window.onload = function () {
+    const machine = JSON.parse(
+        localStorage.getItem("selectedMachine")
+    );
+
+    if (machine) {
+        document.getElementById("machineInfo").innerHTML =
+            "<h3>Machine: " + machine.machine + "</h3>" +
+            "<p>Problem: " + machine.problem + "</p>";
+    }
+
+    loadRepairers();
+};
 </script>
 
 </body>

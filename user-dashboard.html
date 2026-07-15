@@ -342,28 +342,73 @@
         let totalMachines = 0;
         let pendingRepairs = 0;
         let maintenanceRecords = 0;
-        function loadMachines() {
-    let machines = JSON.parse(localStorage.getItem("machines")) || [];
+      async function loadMachines() {
+    const table = document.getElementById('machineTable');
+
+    while (table.rows.length > 2) {
+        table.deleteRow(2);
+    }
+
+    const response = await fetch("http://localhost:5000/machine");
+    const data = await response.json();
+
+    const machines = data.machines || [];
+
+    // UPDATE DASHBOARD CARDS
+    totalMachines = machines.length;
+    pendingRepairs = 0;
+    maintenanceRecords = 0;
 
     machines.forEach(machine => {
-        document.getElementById('emptyRow').style.display = 'none';
+        if (machine.status === "needs-repair") {
+            pendingRepairs++;
+        }
 
-        const table = document.getElementById('machineTable');
+        if (machine.date && machine.date !== "") {
+            maintenanceRecords++;
+        }
+    });
+
+    document.getElementById('totalMachines').innerText =
+        totalMachines;
+
+    document.getElementById('pendingRepairs').innerText =
+        pendingRepairs;
+
+    document.getElementById('maintenanceRecords').innerText =
+        maintenanceRecords;
+
+    if (machines.length === 0) {
+        document.getElementById('emptyRow').style.display =
+            '';
+        return;
+    }
+
+    document.getElementById('emptyRow').style.display =
+        'none';
+
+    machines.forEach(machine => {
         const newRow = table.insertRow(-1);
 
         let statusText = "Working";
 
         if (machine.status === "needs-repair") {
             statusText = "Needs Repair";
-        } else if (machine.status === "maintenance-due") {
+        } else if (
+            machine.status === "maintenance-due"
+        ) {
             statusText = "Maintenance Due";
         }
 
         newRow.innerHTML =
-            '<td>' + machine.name + '</td>' +
+            '<td>' + machine.machineName + '</td>' +
             '<td>' + (machine.problem || '-') + '</td>' +
             '<td>' + (machine.date || '-') + '</td>' +
-            '<td><span class="status ' + machine.status + '">' + statusText + '</span></td>' +
+            '<td><span class="status ' +
+            machine.status +
+            '">' +
+            statusText +
+            '</span></td>' +
             '<td><button class="repair-btn" onclick="requestRepair(this)">Request Repair</button></td>';
     });
 }
@@ -378,13 +423,16 @@
             }
         }
         loadUserData();
+        document.getElementById('machineTable').innerHTML =
+'<tr><th>Machine Name</th><th>Problem Faced (Previous)</th><th>Last Maintenance Date</th><th>Status</th><th></th></tr>' +
+'<tr class="empty-row" id="emptyRow"><td colspan="5">No machines added yet. Click "+ Add Machine" above to add your first one.</td></tr>';
         loadMachines();
 
         function toggleAddForm() {
             document.getElementById('addForm').classList.toggle('show');
         }
 
-        function saveMachine() {
+         async function saveMachine() {
     const name = document.getElementById('newMachineName').value;
     const type = document.getElementById('newMachineType').value;
     const problem = document.getElementById('newMachineProblem').value;
@@ -396,67 +444,33 @@
         return;
     }
 
-    let machines = JSON.parse(localStorage.getItem("machines")) || [];
-
-    machines.push({
-        name: name,
+    const response = await fetch("http://localhost:5000/machine", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        machineName: name,
+        machineType: type,
         problem: problem,
         date: date,
         status: status
-    });
+    })
+});
 
-   
-localStorage.setItem("machines", JSON.stringify(machines));
-            if (name === "" || type === "") {
-                alert("Please enter at least Machine Name and Machine Type");
-                return;
-            }
+const data = await response.json();
 
-            // Hide the "no machines" message once we add the first machine
-            document.getElementById('emptyRow').style.display = 'none';
+alert(data.message);
+loadMachines();
 
-            // Figure out status badge text and class
-            let statusClass = 'working';
-            let statusText = 'Working';
-            if (status === 'needs-repair') {
-                statusClass = 'needs-repair';
-                statusText = 'Needs Repair';
-            } else if (status === 'maintenance-due') {
-                statusClass = 'maintenance-due';
-                statusText = 'Maintenance Due';
-            }
+document.getElementById('newMachineName').value = "";
+document.getElementById('newMachineType').value = "";
+document.getElementById('newMachineProblem').value = "";
+document.getElementById('newMachineDate').value = "";
+document.getElementById('newMachineStatus').value = "working";
 
-            // Build the new table row
-            const table = document.getElementById('machineTable');
-            const newRow = table.insertRow(-1);
-            newRow.innerHTML =
-                '<td>' + name + '</td>' +
-                '<td>' + (problem === "" ? '-' : problem) + '</td>' +
-                '<td>' + (date === "" ? '-' : date) + '</td>' +
-                '<td><span class="status ' + statusClass + '">' + statusText + '</span></td>' +
-                '<td><button class="repair-btn" onclick="requestRepair(this)">Request Repair</button></td>';
-
-            // Update the summary cards
-            totalMachines++;
-            document.getElementById('totalMachines').innerText = totalMachines;
-
-            if (status === 'needs-repair') {
-                pendingRepairs++;
-                document.getElementById('pendingRepairs').innerText = pendingRepairs;
-            }
-
-            if (date !== "") {
-                maintenanceRecords++;
-                document.getElementById('maintenanceRecords').innerText = maintenanceRecords;
-            }
-
-            // Clear the form and hide it
-            document.getElementById('newMachineName').value = "";
-            document.getElementById('newMachineType').value = "";
-            document.getElementById('newMachineProblem').value = "";
-            document.getElementById('newMachineDate').value = "";
-            document.getElementById('newMachineStatus').value = "working";
-            toggleAddForm();
+toggleAddForm();
+            
         }
 
        function requestRepair(button) {

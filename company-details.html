@@ -187,7 +187,7 @@
     </div>
 
     <script>
-        function saveCompanyDetails() {
+       async function saveCompanyDetails() {
             const companyName = document.getElementById('companyName').value;
             const companyAddress = document.getElementById('companyAddress').value;
             const industryType = document.getElementById('industryType').value;
@@ -201,16 +201,37 @@
             }
 
             // Get existing user data (name, phone, role) saved during signup, and add these company details to it
-            let userData = JSON.parse(localStorage.getItem('msmeUser')) || {};
-            userData.companyName = companyName;
-            userData.companyAddress = companyAddress;
-            userData.industryType = industryType;
-            userData.machineCount = machineCount;
-            userData.contactName = contactName;
-            userData.contactPhone = contactPhone;
-            localStorage.setItem('msmeUser', JSON.stringify(userData));
+            const response = await fetch("http://localhost:5000/company", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        companyName: companyName,
+        address: companyAddress,
+        industry: industryType,
+        machineCount: machineCount,
+        contactName: contactName,
+        phone: contactPhone
+    })
+});
 
-            window.location.href = "user-dashboard.html";
+const data = await response.json();
+
+alert(data.message);
+
+let userData = JSON.parse(localStorage.getItem('msmeUser')) || {};
+
+userData.companyName = companyName;
+userData.companyAddress = companyAddress;
+userData.industryType = industryType;
+userData.machineCount = machineCount;
+userData.contactName = contactName;
+userData.contactPhone = contactPhone;
+
+localStorage.setItem('msmeUser', JSON.stringify(userData));
+
+window.location.href = "user-dashboard.html";
         }
     </script>
 

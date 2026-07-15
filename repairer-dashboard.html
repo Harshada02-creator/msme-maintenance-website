@@ -327,18 +327,75 @@
             }
         }
         loadRepairerData();
+        loadRequests();
+        async function loadRequests() {
+    const response = await fetch(
+        "http://localhost:5000/request"
+    );
+
+    const data = await response.json();
+    const requests = data.requests || [];
+
+    const user = JSON.parse(
+        localStorage.getItem("msmeUser")
+    );
+
+    const myRequests = requests.filter(
+        request =>
+            request.repairerPhone === user.phone
+    );
+
+    myRequests.forEach(request => {
+        document.getElementById(
+            "noRequestsRow"
+        ).style.display = "none";
+
+        const table =
+            document.getElementById("requestsTable");
+
+        const row = table.insertRow(-1);
+
+        row.innerHTML =
+            "<td>" + (request.company || "Industry") + "</td>" +
+            "<td>" + request.machine + "</td>" +
+            "<td>" + request.problem + "</td>" +
+            '<td><span class="status new">' +
+            request.status +
+            '</span></td>' +
+            '<td>' +
+            '<button class="accept-btn" onclick="acceptRequest(this)">Accept</button> ' +
+            '<button class="accept-btn" style="background:red" onclick="rejectRequest(this)">Reject</button>' +
+            '</td>';
+    });
+
+    document.getElementById(
+        "newRequests"
+    ).innerText = myRequests.length;
+}
 
         function acceptRequest(button) {
-            const row = button.closest('tr');
-            const statusCell = row.querySelector('.status');
-            statusCell.innerText = 'Accepted';
-            statusCell.classList.remove('new');
-            statusCell.classList.add('accepted');
-            button.style.display = 'none';
+    const row = button.closest("tr");
 
-            // Later: this is where we will update the backend to mark this request as accepted
-        }
+    const statusCell =
+        row.querySelector(".status");
 
+    statusCell.innerText = "Accepted";
+
+    statusCell.classList.remove("new");
+    statusCell.classList.add("accepted");
+
+    button.parentElement.innerHTML = "";
+}
+function rejectRequest(button) {
+    const row = button.closest("tr");
+
+    const statusCell =
+        row.querySelector(".status");
+
+    statusCell.innerText = "Rejected";
+
+    button.parentElement.innerHTML = "";
+}
         function toggleHistory() {
             const section = document.getElementById('historySection');
             if (section.style.display === 'none') {
