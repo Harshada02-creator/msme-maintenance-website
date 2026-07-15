@@ -349,10 +349,19 @@
         table.deleteRow(2);
     }
 
-    const response = await fetch("http://localhost:5000/machine");
-    const data = await response.json();
+    const response = await fetch("https://msme-backend-gvpj.onrender.com/machine");
+   const data = await response.json();
 
-    const machines = data.machines || [];
+const user = JSON.parse(
+    localStorage.getItem("msmeUser")
+);
+
+const allMachines = data.machines || [];
+
+const machines = allMachines.filter(
+    machine =>
+        machine.company === user.companyName
+);
 
     // UPDATE DASHBOARD CARDS
     totalMachines = machines.length;
@@ -443,20 +452,27 @@
         alert("Please enter at least Machine Name and Machine Type");
         return;
     }
+const user = JSON.parse(
+    localStorage.getItem("msmeUser")
+);
 
-    const response = await fetch("http://localhost:5000/machine", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        machineName: name,
-        machineType: type,
-        problem: problem,
-        date: date,
-        status: status
-    })
-});
+const response = await fetch(
+    "https://msme-backend-gvpj.onrender.com/machine",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            machineName: name,
+            machineType: type,
+            problem: problem,
+            date: date,
+            status: status,
+            company: user.companyName
+        })
+    }
+);
 
 const data = await response.json();
 

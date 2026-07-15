@@ -247,7 +247,7 @@ function goBack() {
     }
 
     const response = await fetch(
-        "http://localhost:5000/request",
+        "https://msme-backend-gvpj.onrender.com/request",
         {
             method: "POST",
             headers: {
@@ -271,7 +271,7 @@ function goBack() {
  
 async function loadRepairers() {
     const response = await fetch(
-        "http://localhost:5000/repairer"
+        "https://msme-backend-gvpj.onrender.com/repairer"
     );
 
     const data = await response.json();
